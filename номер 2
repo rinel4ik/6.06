@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp12
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            BankTransfer bankTransfer = new BankTransfer();
+            WalletPayment walletPayment = new WalletPayment();
+
+            IPaymentProcessor paymentProcessor = new PaymentAdapter(bankTransfer, walletPayment);
+
+            paymentProcessor.ProcessPayment("Bank", 100.50);
+            paymentProcessor.ProcessPayment("Wallet", 75.25);
+            paymentProcessor.ProcessPayment("Card", 50.00);
+        }
+    }
+
+    public class BankTransfer
+    {
+        public void ProcessBankPayment(string bankAccount, double amount)
+        {
+            Console.WriteLine($"Cумма {amount} переведена на счет {bankAccount}");
+        }
+    }
+
+    public interface IPaymentProcessor
+    {
+        void ProcessPayment(string method, double amount);
+    }
+
+    public class WalletPayment 
+    {
+        public void ProcessWalletPayment(string walletId, double amount) 
+        {
+            Console.WriteLine($"Cумма {amount} переведена на {walletId}");
+        }
+    }
+
+    public class PaymentAdapter : IPaymentProcessor
+    {
+        private BankTransfer _bankTransfer;
+        private WalletPayment _walletPayment;
+
+        public PaymentAdapter(BankTransfer transfer, WalletPayment wallet)
+        {
+            _bankTransfer = transfer;
+            _walletPayment = wallet;
+        }
+
+        public void ProcessPayment(string method, double amount)
+        {
+            if (method == "Bank" | method == "Wallet")
+            {
+                _bankTransfer.ProcessBankPayment(method, amount);
+            }
+            else 
+            {
+                Console.WriteLine("Неккоректный метод");
+            }
+
+        }
+    }
+
+}
