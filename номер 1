@@ -1,0 +1,77 @@
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Singleton
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            GameSettings settings1 = GameSettings.GetGameSettings();
+            settings1.SetVolume(50);
+            settings1.SetDifficulty("Hard");
+            settings1.SetLanguage("English");
+            settings1.PrintSettings();
+
+            GameSettings settings2 = GameSettings.GetGameSettings();
+            settings2.PrintSettings();
+
+            settings2.SetVolume(70);
+            settings1.PrintSettings();
+        }
+
+    }
+
+    public class GameSettings
+    {
+        private static GameSettings instance;
+
+        public int Volume { get; private set; }
+        public string Difficulty { get; private set; }
+        public string Language { get; private set; }
+
+        private GameSettings()
+        {
+            Volume = 0;
+            Difficulty = null;
+            Language = null;
+        }
+
+        public static GameSettings GetGameSettings()
+        {
+            if (instance == null)
+            {
+                instance = new GameSettings();
+            }
+            return instance;
+        }
+
+        public void SetVolume(int volume) 
+        {
+            Volume = volume;
+        }
+
+        public void SetDifficulty(string difficulty) 
+        {
+            Difficulty = difficulty;
+        }
+
+        public void SetLanguage(string language) 
+        { 
+            Language = language;
+        }
+
+        public void PrintSettings() 
+        {
+            Console.WriteLine($"Текущие настройки:");
+            Console.WriteLine($"Громкость: {Volume}");
+            Console.WriteLine($"Сложность: {Difficulty}");
+            Console.WriteLine($"Язык: {Language}");
+            Console.WriteLine("******************");
+        }
+    }
+}
